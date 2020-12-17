@@ -1,0 +1,15 @@
+.DS_Store
+/data/Pemilu Raya UTM.csv
+/data/daftar-pemilih.csv
+.salt
+db.yaml
+g_*.go
+/node_modules/
+/internal/
+
+/out/*
+!/out/.gitkeep
+
+/test-data/daftar-pemilih.csv
+/test-data/data-verifikasi.csv
+/test-data/PEMILIHAN UMUM MAHASISWA ELECTRONIC VOTE UNIVERSITAS TRUNOJOYO MADURA 2020.csv

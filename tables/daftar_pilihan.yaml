@@ -1,0 +1,73 @@
+csv: data/PEMILIHAN UMUM MAHASISWA ELECTRONIC VOTE UNIVERSITAS TRUNOJOYO MADURA 2020.csv
+separator: ","
+computePackage: pemilutahap1/helper
+dependsOn:
+  - ref_fakultas
+  - ref_paslon_presma
+  - ref_calon_dpm_fh
+  - ref_calon_dpm_feb
+  - ref_calon_dpm_fp
+  - ref_calon_dpm_ft
+  - ref_calon_dpm_fisib
+  # - ref_calon_dpm_fip
+  - ref_calon_dpm_fkis
+constraints:
+  - PRIMARY KEY (nim_email_hashed, waktu_str)
+  - FOREIGN KEY (fakultas) REFERENCES tahap1.ref_fakultas (fakultas)
+  - FOREIGN KEY (pilihan_presma) REFERENCES tahap1.ref_paslon_presma (paslon)
+  - FOREIGN KEY (pilihan_dpm_fh) REFERENCES tahap1.ref_calon_dpm_fh (calon)
+  - FOREIGN KEY (pilihan_dpm_feb) REFERENCES tahap1.ref_calon_dpm_feb (calon)
+  - FOREIGN KEY (pilihan_dpm_fp) REFERENCES tahap1.ref_calon_dpm_fp (calon)
+  - FOREIGN KEY (pilihan_dpm_ft) REFERENCES tahap1.ref_calon_dpm_ft (calon)
+  - FOREIGN KEY (pilihan_dpm_fisib) REFERENCES tahap1.ref_calon_dpm_fisib (calon)
+  # - FOREIGN KEY (pilihan_dpm_fip) REFERENCES tahap1.ref_calon_dpm_fip (calon)
+  - FOREIGN KEY (pilihan_dpm_fkis) REFERENCES tahap1.ref_calon_dpm_fkis (calon)
+fields:
+  - name: waktu_str
+    column: Cap waktu
+    type: text
+    required: true
+  - name: nim_email_hashed
+    column: Nama pengguna
+    type: varchar(32)
+    computeFn: SaltedHash
+    required: true
+  - name: jenis_email
+    column: Nama pengguna
+    type: varchar(13)
+    computeFn: JenisEmail
+    required: true
+  - name: persetujuan
+    column: SAYA MENGGUNAKAN HAK PILIH DALAM PEMILU E-VOTE SECARA SADAR DAN TANPA TEKANAN DARI SIAPAPUN.
+    type: varchar(6)
+    required: true
+  - name: fakultas
+    column: Asal Fakultas
+    type: varchar(5)
+    computeFn: SingkatanFakultas
+    required: true
+  - name: pilihan_presma
+    column: Silahkan pilih calon Presiden dan Wakil Presiden Mahasiswa 2020
+    type: text
+    required: true
+  - name: pilihan_dpm_fh
+    column: Silahkan pilih calon DPM Dapil Fakultas Hukum
+    type: text
+  - name: pilihan_dpm_feb
+    column: Silahkan pilih calon DPM Dapil Fakultas Ekonomi dan Bisnis
+    type: text
+  - name: pilihan_dpm_fp
+    column: Silahkan pilih calon DPM Dapil Fakultas Pertanian
+    type: text
+  - name: pilihan_dpm_ft
+    column: Silahkan pilih calon DPM Dapil Fakultas Teknik
+    type: text
+  - name: pilihan_dpm_fisib
+    column: Silahkan pilih calon DPM Dapil Fakultas Ilmu Sosial dan Ilmu Budaya
+    type: text
+  # - name: pilihan_dpm_fip
+  #   column: Silahkan pilih calon DPM Dapil Fakultas Ilmu Pendidikan
+  #   type: text
+  - name: pilihan_dpm_fkis
+    column: Silahkan pilih calon DPM Dapil Fakultas Keislaman
+    type: text
