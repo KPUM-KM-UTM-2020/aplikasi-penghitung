@@ -1,0 +1,9 @@
+csv: data/ref-calon-dpm-fisib.csv
+separator: ","
+computePackage: pemilutahap1/helper
+constraints:
+  - PRIMARY KEY (calon)
+fields:
+  - name: calon
+    type: text
+    required: true

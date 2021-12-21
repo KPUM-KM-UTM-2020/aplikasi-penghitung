@@ -1,0 +1,64 @@
+dependsOn:
+  - vw_pilihan
+  - ref_paslon_presma
+export: out/vw_hasil_presma.csv
+sql: |
+  WITH
+  
+  -- Penghitungan (aggregasi) suara sah
+  suara_sah AS (
+    SELECT
+      A.paslon AS suara,
+      TRUE AS sah,
+      (
+        SELECT
+          COUNT(*)
+        FROM tahap1.vw_pilihan B
+        WHERE
+          B.suara_presma_sah = TRUE AND
+          B.pilihan_presma = A.paslon
+      ) AS jumlah
+    FROM tahap1.ref_paslon_presma A
+    ORDER BY A.paslon
+  ),
+
+  -- Data helper untuk alasan tidak sah
+  alasan AS (
+    SELECT UNNEST(ARRAY[
+      '(a) Tidak terdaftar dalam daftar pemilih',
+      '(b) Di luar waktu pemungutan suara'
+    ]) AS alasan
+  ),
+
+  -- Penghitungan (aggregasi) suara tidak sah
+  suara_tidak_sah AS (
+    SELECT
+      A.alasan AS suara,
+      FALSE AS sah,
+      (
+        SELECT
+          COUNT(*)
+        FROM tahap1.vw_pilihan B
+        WHERE
+          B.suara_presma_sah = FALSE AND
+          B.alasan_suara_presma_tidak_sah = A.alasan
+      ) AS jumlah
+    FROM alasan A
+  ),
+
+  -- Penggabungan view suara sah dan tidak sah
+  gabungan AS (
+    SELECT * FROM suara_sah
+    UNION ALL
+    SELECT * FROM suara_tidak_sah
+  )
+
+  -- Penghitungan persentase
+  SELECT
+    A.*,
+    CASE
+      WHEN A.sah THEN CAST((A.jumlah * 100) AS FLOAT) / NULLIF((SELECT COUNT(*) FROM tahap1.vw_pilihan WHERE suara_presma_sah), 0)
+      ELSE NULL
+    END AS persentase_dari_suara_sah,
+    CAST((A.jumlah * 100) AS FLOAT) / NULLIF((SELECT COUNT(*) FROM tahap1.vw_pilihan), 0) AS persentase_dari_seluruh_suara
+  FROM gabungan A
